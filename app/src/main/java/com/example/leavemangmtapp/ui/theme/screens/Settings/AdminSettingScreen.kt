@@ -30,6 +30,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -44,6 +45,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -97,39 +99,124 @@ fun AdminSettingScreen(navController: NavHostController){
             BottomAppBar(
                 contentColor = Color.Black,
                 containerColor = Color.Cyan,
-                modifier = Modifier.height(46.dp)
+                modifier = Modifier.height(50.dp) // Adjusted height for better fitting
             ) {
-                IconButton(onClick = { navController.navigate(ROUTE_ADMINHOME) }) {
-                    Icon(imageVector = Icons.Filled.Checklist, contentDescription = "PendingLeaves", modifier = Modifier.padding(bottom = 20.dp))
-                    Text(text = "PENDING LEAVES", fontWeight = FontWeight.Black,fontSize = 10.sp, textAlign = TextAlign.Justify,modifier = Modifier.padding(top = 25.dp))
-
+                IconButton(
+                    onClick = { navController.navigate(ROUTE_ADMINHOME) },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Checklist,
+                            contentDescription = "PendingLeaves",
+                            tint = Color.Black,
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Text(
+                            text = "PENDING LEAVES",
+                            fontWeight = FontWeight.Black,
+                            fontSize = 9.sp,
+                            color=Color.Black,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.width(80.dp) // Adjusted width for fitting
+                        )
+                    }
                 }
-                Spacer(modifier = Modifier.width(30.dp))
 
-                IconButton(onClick = { navController.navigate(ROUTE_LEAVEAALOCATION) })  {
-                    Icon(imageVector = Icons.Filled.AddToPhotos, contentDescription = "AssignLeaves", modifier = Modifier.padding(bottom = 20.dp))
-                    Text(text = "ASSIGN LEAVE", fontWeight = FontWeight.Black,fontSize = 10.sp, textAlign = TextAlign.Justify,modifier = Modifier.padding(top = 25.dp))
+                IconButton(
+                    onClick = { navController.navigate(ROUTE_LEAVEAALOCATION) },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.AddToPhotos,
+                            contentDescription = "AssignLeaves",
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Text(
+                            text = "ASSIGN LEAVE",
+                            fontWeight = FontWeight.Black,
+                            fontSize = 9.sp,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.width(80.dp) // Adjusted width for fitting
+                        )
+                    }
                 }
 
-                Spacer(modifier = Modifier.width(40.dp))
-                IconButton(onClick = { navController.navigate(ROUTE_ADDEMPLOYEE) }) {
-                    Icon(imageVector = Icons.Filled.PersonAdd, contentDescription = "AddEmployee", modifier = Modifier.padding(bottom = 15.dp))
-                    Text(text = "ADD EMPLOYEE",fontWeight = FontWeight.Black,fontSize = 10.sp,textAlign = TextAlign.Justify,modifier = Modifier.padding(top = 25.dp))
+                IconButton(
+                    onClick = { navController.navigate(ROUTE_ADDEMPLOYEE) },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.PersonAdd,
+                            contentDescription = "AddEmployee",
+                            tint = Color.Black,
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Text(
+                            text = "ADD EMPLOYEE",
+                            fontWeight = FontWeight.Black,
+                            fontSize = 9.sp,
+                            color=Color.Black,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.width(80.dp) // Adjusted width for fitting
+                        )
+                    }
                 }
 
-                Spacer(modifier = Modifier.width(40.dp))
-                IconButton(onClick = { navController.navigate(ROUTE_VIEWEMPLOYEES)}) {
-                    Icon(imageVector = Icons.Filled.People, contentDescription = "ViewEmployees", modifier = Modifier.padding(bottom = 15.dp))
-                    Text(text = "VIEW EMPLOYEES",fontWeight = FontWeight.Black,fontSize = 10.sp,textAlign = TextAlign.Justify,modifier = Modifier.padding(top = 25.dp))
+                IconButton(
+                    onClick = { navController.navigate(ROUTE_VIEWEMPLOYEES) },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.People,
+                            contentDescription = "ViewEmployees",
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Text(
+                            text = "VIEW EMPLOYEES",
+                            fontWeight = FontWeight.Black,
+                            fontSize = 9.sp,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.width(80.dp) // Adjusted width for fitting
+                        )
+                    }
                 }
 
-                Spacer(modifier = Modifier.width(40.dp))
-                IconButton(onClick = { navController.navigate(ROUTE_ADMINSETTINGS)}) {
-                    Icon(imageVector = Icons.Filled.Settings , contentDescription = "Settings",tint = Color.Blue , modifier = Modifier.padding(bottom = 15.dp))
-                    Text(text = "SETTINGS", fontWeight = FontWeight.Black, fontSize = 9.sp, color =Color.Blue,textAlign = TextAlign.Justify,modifier = Modifier.padding(top = 25.dp))
+                IconButton(
+                    onClick = { navController.navigate(ROUTE_ADMINSETTINGS) },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Settings,
+                            contentDescription = "Settings",
+                            tint=Color.Blue,
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Text(
+                            text = "SETTINGS",
+                            fontWeight = FontWeight.Black,
+                            fontSize = 9.sp,
+                            color=Color.Blue,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.width(80.dp) // Adjusted width for fitting
+                        )
+                    }
                 }
             }
-
         }
     )
     { innerPadding ->
@@ -172,12 +259,23 @@ fun AdminSettingScreen(navController: NavHostController){
                     if (showTermsPrivacyDialog) {
                         AlertDialog(
                             onDismissRequest = { showTermsPrivacyDialog = false },
+                            modifier = Modifier.width(400.dp),
                             title = { Text(text = "Terms and Privacy Policy") },
                             text = {
                                 Column {
-                                    Text("1. Leave application store application sata on Firebase server.")
-                                    Text("2. We are not responsible of lose of data in case of any isssues.")
-                                    Text("3. Keep the leave app up to date to enjoy new features.")
+                                    Text("1. Leave application stores application data on Firebase server.")
+                                    Divider(
+                                        color = Color.Gray,
+                                        thickness = 1.dp,
+                                        modifier = Modifier.padding(vertical = 8.dp)
+                                    )
+                                    Text("2. We are not responsible of loss of data incase of any isssues.")
+                                    Divider(
+                                        color = Color.Gray,
+                                        thickness = 1.dp,
+                                        modifier = Modifier.padding(vertical = 8.dp)
+                                    )
+                                    Text("3. Keep the leave app upto date to enjoy new features.")
                                     // Add more terms and conditions as needed
                                 }
                             },
@@ -218,7 +316,8 @@ fun AdminSettingScreen(navController: NavHostController){
                     if (showPasswordDialog) {
                         AlertDialog(
                             onDismissRequest = { showPasswordDialog = false },
-                            title = { Text(text = "Change Pasword") },
+                            modifier = Modifier.width(400.dp),
+                            title = { Text(text = "Change Password") },
                             text = {
                                 Column {
                                     Text("Please enter your new password:")
@@ -249,7 +348,7 @@ fun AdminSettingScreen(navController: NavHostController){
                                     colors = ButtonDefaults.buttonColors(Color.Red),
                                     onClick = { showPasswordDialog = false }
                                 ) {
-                                    Text("No")
+                                    Text("Cancel")
                                 }
                             }
                         )

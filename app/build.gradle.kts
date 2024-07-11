@@ -65,6 +65,8 @@ dependencies {
     implementation("androidx.compose.foundation:foundation-android:1.6.8")
     implementation("androidx.compose.runtime:runtime-android:1.6.8")
 //    implementation ("com.google.accompanist:accompanist-pager:0.21.0")
+    implementation ("com.google.android.material:material:1.4.0")
+//    implementation ("com.google.accompanist:accompanist-pager:0.21.0")
     implementation("androidx.paging:paging-common-android:3.3.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")

@@ -1,5 +1,6 @@
 package com.example.leavemangmtapp.ui.theme.screens.AddEmployee
 
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -40,6 +42,7 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -77,9 +80,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.leavemangmtapp.navigation.ROUTE_ADDEMPLOYEE
@@ -90,10 +95,11 @@ import com.example.leavemangmtapp.navigation.ROUTE_HOME
 import com.example.leavemangmtapp.navigation.ROUTE_LEAVEAALOCATION
 import com.example.leavemangmtapp.navigation.ROUTE_REGISTER
 import com.example.leavemangmtapp.navigation.ROUTE_VIEWEMPLOYEES
+import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddEmployeeScreen(navController:NavHostController) {
+fun AddEmployeeScreen(navController: NavHostController) {
     var presses by remember { mutableIntStateOf(0) }
     val mContext = LocalContext.current
     var search by remember { mutableStateOf("") }
@@ -104,20 +110,34 @@ fun AddEmployeeScreen(navController:NavHostController) {
     var address by remember { mutableStateOf("") }
     var dob by remember { mutableStateOf("") }
     var designation by remember { mutableStateOf("") }
-
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     val context = LocalContext.current
     val checkedState = remember { mutableStateOf(true) }
-    val bitmap =  remember { mutableStateOf<Bitmap?>(null) }
+    val bitmap = remember { mutableStateOf<Bitmap?>(null) }
     val launcher = rememberLauncherForActivityResult(contract =
     ActivityResultContracts.GetContent()) { uri: Uri? -> imageUri = uri }
+    var showSaveEmployeeDialog by remember { mutableStateOf(false) } // State to control dialog visibility
 
-    // Remember the state of the button click
-    val clicked = remember { mutableStateOf(false) }
 
-    // Update the clicked state when the button is clicked
-    val updatedClicked = rememberUpdatedState(clicked.value)
+    // DatePickerDialog state
+    var showDatePicker by remember { mutableStateOf(false) }
 
+    // Date Picker Dialog
+    if (showDatePicker) {
+        val currentDate = Calendar.getInstance()
+        val year = currentDate.get(Calendar.YEAR)
+        val month = currentDate.get(Calendar.MONTH)
+        val day = currentDate.get(Calendar.DAY_OF_MONTH)
+
+        DatePickerDialog(
+            context,
+            { _, selectedYear, selectedMonth, selectedDay ->
+                dob = "$selectedDay/${selectedMonth + 1}/$selectedYear"
+                showDatePicker = false
+            },
+            year, month, day
+        ).show()
+    }
 
     Scaffold(
         topBar = {
@@ -128,274 +148,425 @@ fun AddEmployeeScreen(navController:NavHostController) {
                             text = "Add Employee",
                             color = Color.Black,
                             fontSize = 18.sp,
-                            modifier = Modifier.padding(top=10.dp)
+                            modifier = Modifier.padding(top = 10.dp)
                         )
                     }
-
-                }, colors = TopAppBarDefaults.largeTopAppBarColors(Color.Cyan),
-                modifier = Modifier.height(46.dp),
-                        actions = {
-                    IconButton(onClick = { }) {
-                        Icon(imageVector = Icons.Filled.Check, contentDescription = "calender")
-                    }
-                }
+                },
+                colors = TopAppBarDefaults.largeTopAppBarColors(Color.Cyan),
+                modifier = Modifier.height(46.dp)
             )
         },
         bottomBar = {
             BottomAppBar(
                 contentColor = Color.Black,
                 containerColor = Color.Cyan,
-                modifier = Modifier.height(46.dp)
+                modifier = Modifier.height(50.dp) // Adjusted height for better fitting
             ) {
-                IconButton(onClick = { navController.navigate(ROUTE_ADMINHOME) }) {
-                    Icon(imageVector = Icons.Filled.Checklist, contentDescription = "PendingLeaves", modifier = Modifier.padding(bottom = 10.dp))
-                    Text(text = "PENDING LEAVES", fontWeight = FontWeight.Black,fontSize = 10.sp, textAlign = TextAlign.Justify,modifier = Modifier.padding(top = 25.dp))
-
+                IconButton(
+                    onClick = { navController.navigate(ROUTE_ADMINHOME) },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Checklist,
+                            contentDescription = "PendingLeaves",
+                            tint = Color.Black,
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Text(
+                            text = "PENDING LEAVES",
+                            fontWeight = FontWeight.Black,
+                            fontSize = 9.sp,
+                            color=Color.Black,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.width(80.dp) // Adjusted width for fitting
+                        )
+                    }
                 }
-                Spacer(modifier = Modifier.width(30.dp))
 
-                IconButton(onClick = { navController.navigate(ROUTE_LEAVEAALOCATION) })  {
-                    Icon(imageVector = Icons.Filled.AddToPhotos, contentDescription = "AssignLeaves", modifier = Modifier.padding(bottom = 20.dp))
-                    Text(text = "ASSIGN LEAVE", fontWeight = FontWeight.Black,fontSize = 10.sp, textAlign = TextAlign.Justify,modifier = Modifier.padding(top = 25.dp))
+                IconButton(
+                    onClick = { navController.navigate(ROUTE_LEAVEAALOCATION) },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.AddToPhotos,
+                            contentDescription = "AssignLeaves",
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Text(
+                            text = "ASSIGN LEAVE",
+                            fontWeight = FontWeight.Black,
+                            fontSize = 9.sp,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.width(80.dp) // Adjusted width for fitting
+                        )
+                    }
                 }
 
-                Spacer(modifier = Modifier.width(40.dp))
-                IconButton(onClick = { navController.navigate(ROUTE_ADDEMPLOYEE)  }) {
-                    Icon(imageVector = Icons.Filled.PersonAdd, contentDescription = "AddEmployee", tint = Color.Blue,modifier = Modifier.padding(bottom = 15.dp))
-                    Text(text = "ADD EMPLOYEE", color = Color.Blue,fontWeight = FontWeight.Black,fontSize = 10.sp,textAlign = TextAlign.Justify,modifier = Modifier.padding(top = 25.dp))
+                IconButton(
+                    onClick = { navController.navigate(ROUTE_ADDEMPLOYEE) },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.PersonAdd,
+                            contentDescription = "AddEmployee",
+                            tint = Color.Blue,
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Text(
+                            text = "ADD EMPLOYEE",
+                            fontWeight = FontWeight.Black,
+                            fontSize = 9.sp,
+                            color=Color.Blue,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.width(80.dp) // Adjusted width for fitting
+                        )
+                    }
                 }
 
-                Spacer(modifier = Modifier.width(40.dp))
-                IconButton(onClick = { navController.navigate(ROUTE_VIEWEMPLOYEES) }) {
-                    Icon(imageVector = Icons.Filled.People, contentDescription = "ViewEmployees", modifier = Modifier.padding(bottom = 15.dp))
-                    Text(text = "VIEW EMPLOYEES",fontWeight = FontWeight.Black,fontSize = 10.sp,textAlign = TextAlign.Justify,modifier = Modifier.padding(top = 25.dp))
+                IconButton(
+                    onClick = { navController.navigate(ROUTE_VIEWEMPLOYEES) },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.People,
+                            contentDescription = "ViewEmployees",
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Text(
+                            text = "VIEW EMPLOYEES",
+                            fontWeight = FontWeight.Black,
+                            fontSize = 9.sp,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.width(80.dp) // Adjusted width for fitting
+                        )
+                    }
                 }
 
-                Spacer(modifier = Modifier.width(40.dp))
-                IconButton(onClick = { navController.navigate(ROUTE_ADMINSETTINGS)}) {
-                    Icon(imageVector =Icons.Filled.Settings , contentDescription = "Settings", modifier = Modifier.padding(bottom = 15.dp))
-                    Text(text = "SETTINGS", fontWeight = FontWeight.Black, fontSize = 9.sp, textAlign = TextAlign.Justify,modifier = Modifier.padding(top = 25.dp))
+                IconButton(
+                    onClick = { navController.navigate(ROUTE_ADMINSETTINGS) },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Settings,
+                            contentDescription = "Settings",
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Text(
+                            text = "SETTINGS",
+                            fontWeight = FontWeight.Black,
+                            fontSize = 9.sp,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.width(80.dp) // Adjusted width for fitting
+                        )
+                    }
                 }
             }
-
         }
-    )
-    { innerPadding ->
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-                Card( colors = CardDefaults.cardColors(
+            Card(
+                colors = CardDefaults.cardColors(
                     containerColor = Color.White,
                 ),
-                    elevation = CardDefaults.cardElevation(
-                        defaultElevation = 6.dp),
-                    modifier = Modifier
-                        .padding(start = 20.dp, top = 10.dp, end = 5.dp)
-                        .size(width = 360.dp, height = 400.dp)
-//                .shadow(elevation = 50.dp, shape = (RoundedCornerShape(15.dp)))
-                )
-                {
-                    Spacer(modifier = Modifier.height(5.dp))
-                    //Image picker
-
-                    Button(
-                        onClick = { launcher.launch("image/*") },
-                        shape = CutCornerShape(1.dp),
-                        colors = ButtonDefaults.buttonColors(Color.LightGray),
-                        modifier = Modifier.padding(start = 70.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.InsertPhoto,
-                            contentDescription = "choose profile image",
-                        )
-                        Text(
-                            text = "Click & set profile image",
-                            fontWeight = FontWeight.Bold,
-                            color = Color.Black
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
+                elevation = CardDefaults.cardElevation(
+                    defaultElevation = 6.dp),
+                modifier = Modifier
+                    .padding(start = 15.dp, end = 15.dp, top = 15.dp)
+                    .shadow(5.dp, shape = CutCornerShape(5.dp))
+                    .width(400.dp)
+            ) {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(start=50.dp, end = 50.dp, top = 20.dp, bottom = 20.dp)
+                ) {
                     imageUri?.let {
                         if (Build.VERSION.SDK_INT < 28) {
-                            bitmap.value =
-                                MediaStore.Images.Media.getBitmap(context.contentResolver, it)
+                            bitmap.value = MediaStore.Images
+                                .Media.getBitmap(context.contentResolver, it)
 
                         } else {
-                            val source = ImageDecoder.createSource(context.contentResolver, it)
+                            val source = ImageDecoder
+                                .createSource(context.contentResolver, it)
                             bitmap.value = ImageDecoder.decodeBitmap(source)
                         }
 
                         bitmap.value?.let { btm ->
                             Image(
-                                bitmap = btm.asImageBitmap(), contentDescription = null,
-                                modifier = Modifier.size(400.dp)
+                                bitmap = btm.asImageBitmap(),
+                                contentDescription = null,
+                                modifier = Modifier.size(100.dp)
                             )
                         }
                     }
-                    Text(
-                        text = "Employee Information",
-                        modifier = Modifier
-                            .padding(3.dp)
-                            .padding(start = 10.dp),
-                        textAlign = TextAlign.Left,
-                        color = Color.Blue,
-                        fontSize = 13.sp, fontWeight = FontWeight.Bold,
-                    )
 
-                    //Name
+                    Button(onClick = {
+                        launcher.launch("image/*")
+                    },colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Cyan
+                            )
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.InsertPhoto,
+                            contentDescription = "choose profile image",
+                        )
+                        Text(text = "Choose Profile Image", color = Color.Black)
+                    }
+
                     TextField(
                         value = name,
                         onValueChange = { name = it },
-                        modifier = Modifier
-                            .size(width = 350.dp, height = 50.dp)
-                            .padding(start = 15.dp, end = 10.dp),
-                        colors = TextFieldDefaults.textFieldColors(),
-                        label = {
-                            Text(
-                                text = "Employee Name",
-                                modifier = Modifier.padding(start = 1.dp)
-                            )
-                        },
-                        placeholder = { Text(text = "", fontSize = 13.sp) },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
-                    )
-                    //Address
-                    Spacer(modifier = Modifier.height(5.dp))
-                    TextField(
-                        value = address,
-                        onValueChange = { address = it },
-                        modifier = Modifier
-                            .size(width = 350.dp, height = 50.dp)
-                            .padding(start = 15.dp, end = 10.dp),
-                        label = {
-                            Text(
-                                text = "Employee Address",
-                                modifier = Modifier.padding(start = 1.dp)
-                            )
-                        },
-                        placeholder = { Text(text = "", fontSize = 11.sp) },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii),
-
-                        )
-                    //DateOfBirth
-                    Spacer(modifier = Modifier.height(5.dp))
-                    TextField(
-                        value = dob,
-                        onValueChange = { dob = it },
-                        modifier = Modifier
-                            .size(width = 350.dp, height = 50.dp)
-                            .padding(start = 15.dp, end = 10.dp),
-                        label = {
-                            Text(
-                                text = "Date of Birth",
-                                modifier = Modifier.padding(start = 1.dp)
-                            )
-                        },
-                        placeholder = { Text(text = "", fontSize = 11.sp) },
-                        trailingIcon = {
+                        label = { Text(text = "Full Name") },
+                        leadingIcon = {
                             Icon(
-                                imageVector = Icons.Default.EditCalendar,
-                                contentDescription = ""
-                            )
+                                imageVector = Icons.Filled.Person,
+                                contentDescription = "personIcon")
                         },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii),
-
+                        singleLine = true,
+                        colors = TextFieldDefaults.textFieldColors(
+                            focusedIndicatorColor = Color.Cyan,
+                            containerColor = Color.Transparent
                         )
-                    //Mobile number
-                    Spacer(modifier = Modifier.height(5.dp))
+                    )
+
                     TextField(
                         value = mobilenumber,
                         onValueChange = { mobilenumber = it },
-                        modifier = Modifier
-                            .size(width = 350.dp, height = 50.dp)
-                            .padding(start = 15.dp, end = 10.dp),
-                        label = {
-                            Text(
-                                text = "Mobile No.",
-                                modifier = Modifier.padding(start = 1.dp)
+                        label = { Text(text = "Mobile Number") },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Filled.Call,
+                                contentDescription = "callIcon")
+                        },
+                        singleLine = true,
+                        colors = TextFieldDefaults.textFieldColors(
+                            focusedIndicatorColor = Color.Cyan,
+                            containerColor = Color.Transparent
+                        ),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Phone
+                        )
+                    )
+
+                    TextField(
+                        value = address,
+                        onValueChange = { address = it },
+                        label = { Text(text = "Address") },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Filled.Person,
+                                contentDescription = "personIcon")
+                        },
+                        singleLine = true,
+                        colors = TextFieldDefaults.textFieldColors(
+                            focusedIndicatorColor = Color.Cyan,
+                            containerColor = Color.Transparent
+                        )
+                    )
+
+                    // TextField for Date of Birth
+                    TextField(
+                        value = dob,
+                        onValueChange = { dob = it },
+                        label = { Text(text = "Date of Birth") },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Filled.EditCalendar,
+                                contentDescription = "calendarIcon")
+                        },
+                        trailingIcon = {
+                            Icon(
+                                imageVector = Icons.Filled.CalendarMonth,
+                                contentDescription = "calendarIcon",
+                                modifier = Modifier.clickable {
+                                    showDatePicker = true
+                                }
                             )
                         },
-                        placeholder = { Text(text = "+254721793739", fontSize = 11.sp) },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
+                        singleLine = true,
+                        colors = TextFieldDefaults.textFieldColors(
+                            focusedIndicatorColor = Color.Cyan,
+                            containerColor = Color.Transparent
+                        )
                     )
-                    //Position
-                    Spacer(modifier = Modifier.height(5.dp))
+
                     TextField(
                         value = designation,
                         onValueChange = { designation = it },
-                        modifier = Modifier
-                            .size(width = 350.dp, height = 50.dp)
-                            .padding(start = 15.dp, end = 10.dp),
-                        label = {
-                            Text(
-                                text = "Designation(E.g. Employee,Manager)",
-                                modifier = Modifier.padding(start = 1.dp)
-                            )
+                        label = { Text(text = "Designation") },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Filled.Person,
+                                contentDescription = "personIcon")
                         },
-                        placeholder = { Text(text = "", fontSize = 13.sp) },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+                        singleLine = true,
+                        colors = TextFieldDefaults.textFieldColors(
+                            focusedIndicatorColor = Color.Cyan,
+                            containerColor = Color.Transparent
+                        )
                     )
-//                Spacer(modifier = Modifier.height(10.dp))
-//                Text(text = "Leave Approval Rights", fontSize = 20.sp)
-//                Text(text = "Able to approve / reject leave requests of")
-//                Text(text = "other employees.")
-                }
 
-                 Spacer(modifier = Modifier.height(1.dp))
-            Card (colors = CardDefaults.cardColors(
-                containerColor = Color.White,
-            ),
+                }
+            }
+            //
+            Card(
+                colors = CardDefaults.cardColors(
+                    containerColor = Color.White,
+                ),
                 elevation = CardDefaults.cardElevation(
                     defaultElevation = 6.dp),
                 modifier = Modifier
-                    .padding(start = 20.dp, end = 5.dp)
-                    .size(width = 360.dp, height = 150.dp)
-            ){
-                Text(text = "Credentials",
-                    modifier = Modifier
-                        .padding(3.dp)
-                        .padding(start = 10.dp),
-                    textAlign = TextAlign.Left,
-                    color = Color.Blue,
-                    fontSize = 13.sp, fontWeight = FontWeight.Bold)
-                //Email
-                TextField(
-                    value = email,
-                    onValueChange = { email = it },
-                    modifier = Modifier
-                        .size(width = 350.dp, height = 50.dp)
-                        .padding(start = 30.dp, end = 20.dp),
-                    label = { Text(text = "Email",modifier = Modifier.padding(start = 1.dp)) },
-                    placeholder = { Text(text = "", fontSize = 13.sp) },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
-                )
-                //Password
-                Spacer(modifier = Modifier.height(5.dp))
-                TextField(
-                    value = password,
-                    onValueChange = { password = it },
-                    modifier = Modifier
-                        .size(width = 350.dp, height = 50.dp)
-                        .padding(start = 30.dp, end = 20.dp),
-                    label = { Text(text = "Password",modifier = Modifier.padding(start = 1.dp))},
-                    placeholder = { Text(text = "", fontSize = 11.sp) },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                    visualTransformation = PasswordVisualTransformation()
+                    .padding(start = 15.dp, end = 15.dp, top = 15.dp)
+                    .shadow(5.dp, shape = CutCornerShape(5.dp))
+                    .width(400.dp)
+            ) {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(start=50.dp, end = 50.dp, top = 20.dp, bottom = 20.dp)
+                ) {
+                    TextField(
+                        value = email,
+                        onValueChange = { email = it },
+                        label = { Text(text = "Email") },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Filled.Email,
+                                contentDescription = "emailIcon")
+                        },
+                        singleLine = true,
+                        colors = TextFieldDefaults.textFieldColors(
+                            focusedIndicatorColor = Color.Cyan,
+                            containerColor = Color.Transparent
+                        ),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Email
+                        )
+                    )
+
+                    TextField(
+                        value = password,
+                        onValueChange = { password = it },
+                        label = { Text(text = "Password") },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Filled.Lock,
+                                contentDescription = "passwordIcon")
+                        },
+                        singleLine = true,
+                        colors = TextFieldDefaults.textFieldColors(
+                            focusedIndicatorColor = Color.Cyan,
+                            containerColor = Color.Transparent
+                        ),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Password
+                        ),
+                        visualTransformation = PasswordVisualTransformation()
+                    )
+
+                }
+            }
+            Button(
+                onClick = {showSaveEmployeeDialog=true},
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Cyan
+                ),
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .width(200.dp)
+            ) {
+                Text(
+                    text = "Save Employee",
+                    color = Color.Black,
+                    fontWeight = FontWeight.Bold
                 )
             }
-
-        }
+            if (showSaveEmployeeDialog) {
+                AlertDialog(
+                    onDismissRequest = { showSaveEmployeeDialog = false },
+                    modifier = Modifier.width(400.dp),
+                    title = { Text(text = "Successfully Added") },
+                    text = {
+                        Column {
+                            Text("Employee Added Successfully.")
+                            Spacer(modifier = Modifier.height(20.dp))
+                            Text("Please share required details with #name. So he/she can start using the application.")
+                        }
+                    },
+                    confirmButton = {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 8.dp),
+                            horizontalArrangement = Arrangement.SpaceEvenly
+                        ) {
+                            Text(
+                                text = "VIA EMAIL",
+                                color = Color.Blue,
+                                textDecoration = TextDecoration.Underline,
+                                modifier = Modifier.clickable {
+                                    val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                                        type = "text/plain"
+                                        putExtra(Intent.EXTRA_EMAIL, arrayOf("employeemail@gmail.com"))
+                                        putExtra(Intent.EXTRA_SUBJECT, "subject")
+                                        putExtra(Intent.EXTRA_TEXT, "Hello, this is the email")
+                                    }
+                                    mContext.startActivity(shareIntent)
+                                }
+                            )
+                            Spacer(modifier = Modifier.width(5.dp))
+                            Text(
+                                text = "VIA SMS",
+                                color = Color.Blue,
+                                textDecoration = TextDecoration.Underline,
+                                modifier = Modifier.clickable {
+                                    val smsIntent = Intent(Intent.ACTION_SENDTO).apply {
+                                        data = Uri.parse("smsto:0712345678")
+                                        putExtra("sms_body", "Hello #name, these are your credentials use them to log in?")
+                                    }
+                                    mContext.startActivity(smsIntent)
+                                }
+                            )
+                            Spacer(modifier = Modifier.width(16.dp))
+                            Text(
+                                text = "CANCEL",
+                                color = Color.Red,
+                                textDecoration = TextDecoration.Underline,
+                                modifier = Modifier.clickable {
+                                    showSaveEmployeeDialog = false
+                                }
+                            )
+                        }
+                    },
+                    dismissButton = {}
+                )
+            }
         }
     }
-
-
+}
 
 @Preview(showBackground = true)
 @Composable
 fun AddEmployeeScreenPreview() {
-    AddEmployeeScreen(navController = rememberNavController())
+    val navController = rememberNavController()
+    AddEmployeeScreen(navController)
 }

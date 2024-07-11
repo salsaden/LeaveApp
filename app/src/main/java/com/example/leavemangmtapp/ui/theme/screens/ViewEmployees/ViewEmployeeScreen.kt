@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddToPhotos
 import androidx.compose.material.icons.filled.Checklist
@@ -49,7 +51,10 @@ import com.example.leavemangmtapp.navigation.ROUTE_VIEWEMPLOYEES
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.TextField
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.input.ImeAction
 import com.example.leavemangmtapp.navigation.ROUTE_ADMINSETTINGS
 
@@ -60,6 +65,17 @@ fun ViewEmployeesScreen(navController:NavHostController) {
     var presses by remember { mutableIntStateOf(0) }
     val mContext = LocalContext.current
     var search by remember { mutableStateOf("") }
+    var isSearchActive by remember { mutableStateOf(false) }
+    var isDialogVisible by remember { mutableStateOf(false) }
+    var selectedYear by remember { mutableStateOf(2024) } // Default selected year
+    val years = (2020..2026).toList()
+    val focusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(isSearchActive) {
+        if (isSearchActive) {
+            focusRequester.requestFocus()
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -76,23 +92,28 @@ fun ViewEmployeesScreen(navController:NavHostController) {
 
                 }, colors = TopAppBarDefaults.largeTopAppBarColors(Color.Cyan),
                 modifier = Modifier.height(46.dp),
-                        actions = {
-                    IconButton(onClick = {
-//                        OutlinedTextField(value = search,
-//                            onValueChange ={search=it},
-//                            modifier = Modifier
-//                                .fillMaxWidth()
-//                                .padding(start = 10.dp, end = 10.dp),
-////                            leadingIcon = { Icon(imageVector = Icons.Default.Search, contentDescription ="search")},
-//                            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Search),
-//                            placeholder = { Text(text = "Search....")}
-//                        )
-                    })
-                    {
-                        Icon(imageVector = Icons.Filled.Search, contentDescription = "search")
-//                       keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Search),
-//                       placeholder = { Text(text = "Search...")}
-
+                actions = {
+                    if (isSearchActive) {
+                        androidx.compose.material3.TextField(
+                            value = search,
+                            onValueChange = { search = it },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .focusRequester(focusRequester),
+                            placeholder = { Text(text = "Search...") },
+                            keyboardOptions = KeyboardOptions.Default.copy(
+                                imeAction = ImeAction.Search
+                            ),
+                            keyboardActions = KeyboardActions(
+                                onSearch = {
+                                    // Handle search action here
+                                }
+                            )
+                        )
+                    } else {
+                        IconButton(onClick = { isSearchActive = true }) {
+                            Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")
+                        }
                     }
                 }
             )
@@ -101,39 +122,124 @@ fun ViewEmployeesScreen(navController:NavHostController) {
             BottomAppBar(
                 contentColor = Color.Black,
                 containerColor = Color.Cyan,
-                modifier = Modifier.height(46.dp)
+                modifier = Modifier.height(50.dp) // Adjusted height for better fitting
             ) {
-                IconButton(onClick = { navController.navigate(ROUTE_ADMINHOME) }) {
-                    Icon(imageVector = Icons.Filled.Checklist, contentDescription = "PendingLeaves", modifier = Modifier.padding(bottom = 20.dp))
-                    Text(text = "PENDING LEAVES", fontWeight = FontWeight.Black,fontSize = 10.sp, textAlign = TextAlign.Justify,modifier = Modifier.padding(top = 25.dp))
-
+                IconButton(
+                    onClick = { navController.navigate(ROUTE_ADMINHOME) },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Checklist,
+                            contentDescription = "PendingLeaves",
+                            tint = Color.Black,
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Text(
+                            text = "PENDING LEAVES",
+                            fontWeight = FontWeight.Black,
+                            fontSize = 9.sp,
+                            color=Color.Black,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.width(80.dp) // Adjusted width for fitting
+                        )
+                    }
                 }
-                Spacer(modifier = Modifier.weight(0.5f))
 
-                IconButton(onClick = { navController.navigate(ROUTE_LEAVEAALOCATION) })  {
-                    Icon(imageVector = Icons.Filled.AddToPhotos, contentDescription = "AssignLeaves", modifier = Modifier.padding(bottom = 20.dp))
-                    Text(text = "ASSIGN LEAVE", fontWeight = FontWeight.Black,fontSize = 10.sp, textAlign = TextAlign.Justify,modifier = Modifier.padding(top = 25.dp))
+                IconButton(
+                    onClick = { navController.navigate(ROUTE_LEAVEAALOCATION) },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.AddToPhotos,
+                            contentDescription = "AssignLeaves",
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Text(
+                            text = "ASSIGN LEAVE",
+                            fontWeight = FontWeight.Black,
+                            fontSize = 9.sp,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.width(80.dp) // Adjusted width for fitting
+                        )
+                    }
                 }
 
-                Spacer(modifier = Modifier.weight(1f))
-                IconButton(onClick = { navController.navigate(ROUTE_ADDEMPLOYEE)}) {
-                    Icon(imageVector = Icons.Filled.PersonAdd, contentDescription = "AddEmployee", modifier = Modifier.padding(bottom = 15.dp))
-                    Text(text = "ADD EMPLOYEE",fontWeight = FontWeight.Black,fontSize = 10.sp,textAlign = TextAlign.Justify,modifier = Modifier.padding(top = 25.dp))
+                IconButton(
+                    onClick = { navController.navigate(ROUTE_ADDEMPLOYEE) },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.PersonAdd,
+                            contentDescription = "AddEmployee",
+                            tint = Color.Black,
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Text(
+                            text = "ADD EMPLOYEE",
+                            fontWeight = FontWeight.Black,
+                            fontSize = 9.sp,
+                            color=Color.Black,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.width(80.dp) // Adjusted width for fitting
+                        )
+                    }
                 }
 
-                Spacer(modifier = Modifier.weight(1f))
-                IconButton(onClick = { navController.navigate(ROUTE_VIEWEMPLOYEES)}) {
-                    Icon(imageVector = Icons.Filled.People, contentDescription = "ViewEmployees", tint = Color.Blue, modifier = Modifier.padding(bottom = 15.dp))
-                    Text(text = "VIEW EMPLOYEES", color = Color.Blue,fontWeight = FontWeight.Black,fontSize = 10.sp,textAlign = TextAlign.Justify,modifier = Modifier.padding(top = 25.dp))
+                IconButton(
+                    onClick = { navController.navigate(ROUTE_VIEWEMPLOYEES) },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.People,
+                            contentDescription = "ViewEmployees",
+                            tint=Color.Blue,
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Text(
+                            text = "VIEW EMPLOYEES",
+                            fontWeight = FontWeight.Black,
+                            fontSize = 9.sp,
+                            color=Color.Blue,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.width(80.dp) // Adjusted width for fitting
+                        )
+                    }
                 }
 
-                Spacer(modifier = Modifier.weight(1f))
-                IconButton(onClick = { navController.navigate(ROUTE_ADMINSETTINGS)}) {
-                    Icon(imageVector =Icons.Filled.Settings , contentDescription = "Settings", modifier = Modifier.padding(bottom = 15.dp))
-                    Text(text = "SETTINGS", fontWeight = FontWeight.Black, fontSize = 9.sp, textAlign = TextAlign.Justify,modifier = Modifier.padding(top = 25.dp))
+                IconButton(
+                    onClick = { navController.navigate(ROUTE_ADMINSETTINGS) },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Settings,
+                            contentDescription = "Settings",
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Text(
+                            text = "SETTINGS",
+                            fontWeight = FontWeight.Black,
+                            fontSize = 9.sp,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.width(80.dp) // Adjusted width for fitting
+                        )
+                    }
                 }
             }
-
         }
     )
     { innerPadding ->

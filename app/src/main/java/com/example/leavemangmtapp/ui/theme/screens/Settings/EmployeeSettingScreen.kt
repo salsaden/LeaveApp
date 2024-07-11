@@ -49,6 +49,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -107,28 +108,97 @@ fun EmployeeSettingScreen(navController: NavHostController){
                 containerColor = Color.Cyan,
                 modifier = Modifier.height(46.dp)
             ) {
-                IconButton(onClick = { navController.navigate(ROUTE_HOME) }) {
-                    Icon(imageVector = Icons.Filled.Dashboard, contentDescription = "Dashboard", tint = Color.Black , modifier = Modifier.padding(bottom = 20.dp))
-                    Text(text = "DASHBOARD", fontWeight = FontWeight.Black,fontSize = 10.sp, color=Color.Black,textAlign = TextAlign.Justify,modifier = Modifier.padding(top = 25.dp))
-
+                IconButton(
+                    onClick = { navController.navigate(ROUTE_HOME) },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Dashboard,
+                            contentDescription = "Dashboard",
+                            tint = Color.Blue,
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Text(
+                            text = "DASHBOARD",
+                            fontWeight = FontWeight.Black,
+                            color=Color.Blue,
+                            fontSize = 9.sp,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.width(90.dp) // Adjusted width for fitting
+                        )
+                    }
                 }
-                Spacer(modifier = Modifier.width(60.dp))
-
-                IconButton(onClick = { navController.navigate(ROUTE_APPLY) })  {
-                    Icon(imageVector = Icons.Filled.AddCircle, contentDescription = "ApplyLeaves", tint = Color.Black , modifier = Modifier.padding(bottom = 20.dp))
-                    Text(text = "APPLY LEAVE",color = Color.Black, fontWeight = FontWeight.Black,fontSize = 10.sp, textAlign = TextAlign.Justify,modifier = Modifier.padding(top = 25.dp))
+                IconButton(
+                    onClick = { navController.navigate(ROUTE_APPLY) },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.AddCircle,
+                            contentDescription = "ApplyLeave",
+                            tint = Color.Black,
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Text(
+                            text = "APPLY LEAVE",
+                            fontWeight = FontWeight.Black,
+                            fontSize = 9.sp,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.width(90.dp) // Adjusted width for fitting
+                        )
+                    }
                 }
 
-                Spacer(modifier = Modifier.width(60.dp))
-                IconButton(onClick = { navController.navigate(ROUTE_EMPLOYEEPROFILE)}) {
-                    Icon(imageVector = Icons.Filled.Person, contentDescription = "Profile",  tint = Color.Black ,modifier = Modifier.padding(bottom = 15.dp))
-                    Text(text = "PROFILE",color = Color.Black,fontWeight = FontWeight.Black,fontSize = 10.sp,textAlign = TextAlign.Justify,modifier = Modifier.padding(top = 25.dp))
+                IconButton(
+                    onClick = { navController.navigate(ROUTE_EMPLOYEEPROFILE) },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Person,
+                            contentDescription = "Profile",
+                            tint = Color.Black,
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Text(
+                            text = "PROFILE",
+                            fontWeight = FontWeight.Black,
+                            fontSize = 9.sp,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.width(90.dp) // Adjusted width for fitting
+                        )
+                    }
                 }
 
-                Spacer(modifier = Modifier.width(60.dp))
-                IconButton(onClick = { navController.navigate(ROUTE_EMPLOYEESETTINGS)}) {
-                    Icon(imageVector =Icons.Filled.Settings , contentDescription = "Settings",  tint = Color.Blue ,modifier = Modifier.padding(bottom = 15.dp))
-                    Text(text = "SETTINGS",color = Color.Blue, fontWeight = FontWeight.Black,fontSize = 9.sp, textAlign = TextAlign.Justify,modifier = Modifier.padding(top = 25.dp))
+                IconButton(
+                    onClick = { navController.navigate(ROUTE_EMPLOYEESETTINGS) },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Settings,
+                            contentDescription = "Settings",
+                            tint = Color.Blue,
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Text(
+                            text = "SETTINGS",
+                            fontWeight = FontWeight.Black,
+                            fontSize = 9.sp,
+                            color=Color.Blue,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.width(90.dp) // Adjusted width for fitting
+                        )
+                    }
                 }
             }
 
