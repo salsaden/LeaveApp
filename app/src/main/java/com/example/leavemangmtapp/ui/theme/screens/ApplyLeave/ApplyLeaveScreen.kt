@@ -50,6 +50,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.BottomAppBar
@@ -353,13 +354,13 @@ fun ApplyLeaveScreen(navController: NavHostController) {
                         containerColor = Color.Transparent,
                         contentColor = Color.Black
                     ),
-                    border = BorderStroke(3.dp, Color.Black)
+                    border = BorderStroke(3.dp, Color.Cyan)
                 ) {
                     Icon(imageVector = Icons.Filled.DateRange, contentDescription = "calendar")
                     Text(
                         text = if (fromDate.isEmpty()) " From Date" else " From Date: $fromDate",
                         fontSize = 15.sp,
-                        color = Color.Gray
+                        color = Color.Black
                     )
                 }
                 Spacer(modifier = Modifier.width(5.dp))
@@ -373,13 +374,13 @@ fun ApplyLeaveScreen(navController: NavHostController) {
                         containerColor = Color.Transparent,
                         contentColor = Color.Black
                     ),
-                    border = BorderStroke(3.dp, Color.Black)
+                    border = BorderStroke(3.dp, Color.Cyan)
                 ) {
                     Icon(imageVector = Icons.Filled.DateRange, contentDescription = "calendar")
                     Text(
                         text = if (toDate.isEmpty()) " To Date" else " To Date: $toDate",
                         fontSize = 15.sp,
-                        color = Color.Gray
+                        color = Color.Black
                     )
                 }
             }
@@ -457,8 +458,8 @@ fun ApplyLeaveScreen(navController: NavHostController) {
 //                    .fillMaxWidth()
                     .align(Alignment.CenterHorizontally)
                     .padding(horizontal = 10.dp)
-                    .width(200.dp),
-                shape = CutCornerShape(5.dp),
+                    .width(150.dp),
+                shape = RoundedCornerShape(30.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Cyan,
                     contentColor = Color.Black

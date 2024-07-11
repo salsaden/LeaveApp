@@ -427,7 +427,7 @@ fun AddEmployeeScreen(navController: NavHostController) {
 
                 }
             }
-            //
+            //CredentialsCard
             Card(
                 colors = CardDefaults.cardColors(
                     containerColor = Color.White,
@@ -492,7 +492,7 @@ fun AddEmployeeScreen(navController: NavHostController) {
                 ),
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
-                    .width(200.dp)
+                    .width(150.dp)
             ) {
                 Text(
                     text = "Save Employee",

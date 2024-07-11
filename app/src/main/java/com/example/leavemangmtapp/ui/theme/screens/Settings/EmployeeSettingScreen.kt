@@ -35,6 +35,7 @@ import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -118,13 +119,13 @@ fun EmployeeSettingScreen(navController: NavHostController){
                         Icon(
                             imageVector = Icons.Filled.Dashboard,
                             contentDescription = "Dashboard",
-                            tint = Color.Blue,
+                            tint = Color.Black,
                             modifier = Modifier.size(24.dp)
                         )
                         Text(
                             text = "DASHBOARD",
                             fontWeight = FontWeight.Black,
-                            color=Color.Blue,
+                            color=Color.Black,
                             fontSize = 9.sp,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.width(90.dp) // Adjusted width for fitting
@@ -247,8 +248,18 @@ fun EmployeeSettingScreen(navController: NavHostController){
                             title = { Text(text = "Terms and Privacy Policy") },
                             text = {
                                 Column {
-                                    Text("1. Leave application store application sata on Firebase server.")
-                                    Text("2. We are not responsible of lose of data in case of any isssues.")
+                                    Text("1. Leave application stores application data on Firebase server.")
+                                    Divider(
+                                        color = Color.Gray,
+                                        thickness = 1.dp,
+                                        modifier = Modifier.padding(vertical = 8.dp)
+                                    )
+                                    Text("2. We are not responsible of loss of data in case of any isssues.")
+                                    Divider(
+                                        color = Color.Gray,
+                                        thickness = 1.dp,
+                                        modifier = Modifier.padding(vertical = 8.dp)
+                                    )
                                     Text("3. Keep the leave app up to date to enjoy new features.")
                                     // Add more terms and conditions as needed
                                 }
@@ -451,7 +462,7 @@ fun EmployeeSettingScreen(navController: NavHostController){
                     .padding(start = 7.dp)
                     .size(width = 400.dp, height = 120.dp)
             ){
-                Text(text = "About Me",
+                Text(text = "About App Developer",
                     modifier = Modifier.
                     padding(start = 5.dp, top = 10.dp),
                     fontSize = 15.sp,
@@ -462,13 +473,13 @@ fun EmployeeSettingScreen(navController: NavHostController){
                 Row {
                     Text(text = "Developed by", modifier = Modifier.padding(start = 5.dp, top= 5.dp) , color = Color.Gray)
                     Spacer(modifier = Modifier.width(160.dp))
-                    Text(text = "Salma Sirat", fontFamily = FontFamily.Monospace, fontWeight = FontWeight.ExtraBold,modifier = Modifier.padding(start = 5.dp, top= 5.dp))
+                    Text(text = "Salma Sirat", fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold,modifier = Modifier.padding(start = 5.dp, top= 5.dp))
                 }
                 Spacer(modifier = Modifier.height(10.dp))
                 Row {
                     Text(text = "Contact", modifier = Modifier.padding(start = 5.dp, top= 5.dp) , color = Color.Gray)
                     Spacer(modifier = Modifier.width(200.dp))
-                    Text(text = "0721793739", fontFamily = FontFamily.Monospace, fontWeight = FontWeight.ExtraBold,modifier = Modifier.padding(start = 5.dp, top= 5.dp))
+                    Text(text = "0721793739", fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold,modifier = Modifier.padding(start = 5.dp, top= 5.dp))
                 }
             }
         }

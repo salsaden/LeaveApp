@@ -275,7 +275,7 @@ fun AdminSettingScreen(navController: NavHostController){
                                         thickness = 1.dp,
                                         modifier = Modifier.padding(vertical = 8.dp)
                                     )
-                                    Text("3. Keep the leave app upto date to enjoy new features.")
+                                    Text("3. Keep the leave app up to date to enjoy new features.")
                                     // Add more terms and conditions as needed
                                 }
                             },
