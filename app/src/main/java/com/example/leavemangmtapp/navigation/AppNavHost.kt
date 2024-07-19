@@ -38,9 +38,6 @@ fun AppNavHost(modifier: Modifier=Modifier,
         }
         composable(ROUTE_HOME){
             HomeScreen(navController)
-            RejectedScreen(navController)
-            PendingScreen(navController)
-            ApprovedScreen(navController)
         }
         composable(ROUTE_APPLY){
             ApplyLeaveScreen(navController)
